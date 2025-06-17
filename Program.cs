@@ -1,6 +1,7 @@
 using API_Ticket_Project.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Scalar.AspNetCore;
+using System.Net.Sockets;
 
 
 
@@ -77,12 +78,16 @@ app.MapGet("/tickets", () => tickets);
 
 app.MapGet("/tickets/{status}", (string? status) =>
 {
-    if (status == "open")
+
+    foreach(var t in tickets)
     {
-        return Results.Ok("Tickets ouverts");
+        if (status == "open")
+        {
+            return Results.Ok(t);
+        }
     }
 
-    return Results.Ok("Tous les tickets");
+    return Results.Ok("Filter Done");
 });
 
 
@@ -144,10 +149,13 @@ app.MapGet("/users/{id}/tickets", (int id) =>
 
     foreach( var t in tickets)
     {
-
+        if(t.User.Id == id)
+        {
+            return Results.Ok(t);
+        }
     }
 
-    return Results.Ok(ticket);
+    return Results.Ok("Seach done");
 }
 );
 
